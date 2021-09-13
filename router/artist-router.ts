@@ -1,7 +1,10 @@
 import express, { Router, Request, Response } from 'express';
-import { validate } from 'class-validator';
+import { validate, ValidationError } from 'class-validator';
 import { ArtistDomain } from '../domain/artist.domain';
 import { CreateArtist } from '../class/create-artist';
+import { Artist } from '../data/entity/artist';
+import { ErrorCodes } from '../enum/error-codes';
+import { getHttpErrorCode } from '../class/http-error-code';
 
 export const ArtistRouter: Router = express.Router();
 
@@ -31,11 +34,13 @@ ArtistRouter.get(`/:id`, async (req: Request, res: Response) => {
 
         let artist = await domain.getArtistByID(artistID);
 
-        (!artist ? res.sendStatus(404) : res.json(artist));
+        res.json(artist);
     }
     catch (err) {
 
-        (err == 'INVALID' ? res.sendStatus(400) : res.sendStatus(500));
+        console.log(err);
+
+        res.sendStatus(getHttpErrorCode(err));
     }
 });
 
@@ -49,7 +54,7 @@ ArtistRouter.post(`/`, async (req: Request, res: Response) => {
         if (validationErr.length > 0) {
 
             res.sendStatus(400);
-            
+
             return;
         }
 
@@ -59,5 +64,23 @@ ArtistRouter.post(`/`, async (req: Request, res: Response) => {
     }
     catch (err) {
         res.sendStatus(500);
+    }
+});
+
+ArtistRouter.put(`/`, async (req: Request, res: Response) => {
+
+    try {
+
+        let updatedArtist: Artist = new Artist(req.body.name, req.body.id, req.body.createdAt, req.body.updatedAt);
+
+        let artist = await domain.updateArtist(updatedArtist);
+
+        res.json(artist);
+    }
+    catch (err) {
+
+        console.log(err);
+
+        res.sendStatus(getHttpErrorCode(err));
     }
 });

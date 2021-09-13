@@ -19,7 +19,10 @@ export class Artist implements ILibraryObject {
     @UpdateDateColumn({ name: 'UpdatedAt' })
     public updatedAt: string | undefined;
 
-    constructor(artistName: string) {
-        this.name = artistName;
+    constructor(artistName: string, id?: string, createdAt?: string, updatedAt?: string) {
+        this.name = artistName;        
+        this.id = id;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 }

@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import dotenv from 'dotenv';
 import { createConnection } from 'typeorm';
 import express, { Request, Response, Application } from 'express';
+import cors from 'cors';
 
 dotenv.config();
 
@@ -12,6 +13,8 @@ createConnection()
 
         const App: Application = express();
         const PORT: number = parseInt(process.env.API_PORT || API_PORT_DEF);
+
+        App.use([express.json(), cors()]);
 
         App.get(`/`, (req: Request, res: Response) => {
 

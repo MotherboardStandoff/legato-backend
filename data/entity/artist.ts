@@ -3,7 +3,7 @@ import { Length, IsUUID } from 'class-validator';
 import { ILibraryObject } from '../interface/iLibrary-object';
 
 @Entity({ name: 'artist' })
-export class ArtistEntity implements ILibraryObject {
+export class Artist implements ILibraryObject {
 
     @PrimaryGeneratedColumn('uuid', { name: 'ID' })
     @IsUUID()

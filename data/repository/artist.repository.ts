@@ -1,7 +1,22 @@
 import { EntityRepository, Repository } from "typeorm";
-import { ArtistEntity } from "../entity/artist.entity";
+import { Artist } from "../entity/artist";
 
-@EntityRepository(ArtistEntity)
-export class ArtistRepository extends Repository<ArtistEntity> {
+@EntityRepository(Artist)
+export class ArtistRepository extends Repository<Artist> {
 
+    public getArtistByName(artistName: string): Promise<Artist[]> {
+        return new Promise(async (resolve, reject) => {
+
+            try {
+
+                let artists = await this.find({ where: { name: artistName } });
+
+                resolve(artists);
+            }
+            catch (err) {
+
+                reject(err);
+            }
+        });
+    }
 }

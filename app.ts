@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import { createConnection } from 'typeorm';
 import express, { Request, Response, Application } from 'express';
 import cors from 'cors';
+import { ArtistRouter } from './router/artist-router';
 
 dotenv.config();
 
@@ -16,6 +17,9 @@ createConnection()
 
         // Middleware
         App.use([express.json(), cors()]);
+
+        //Routers
+        App.use(`/artist`, ArtistRouter);
 
         App.get(`/`, (req: Request, res: Response) => {
 

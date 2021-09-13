@@ -14,6 +14,7 @@ createConnection()
         const App: Application = express();
         const PORT: number = parseInt(process.env.API_PORT || API_PORT_DEF);
 
+        // Middleware
         App.use([express.json(), cors()]);
 
         App.get(`/`, (req: Request, res: Response) => {

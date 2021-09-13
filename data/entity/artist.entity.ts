@@ -7,17 +7,17 @@ export class ArtistEntity implements ILibraryObject {
 
     @PrimaryGeneratedColumn('uuid', { name: 'ID' })
     @IsUUID()
-    public id: string = '';
+    public id: string | undefined;
 
     @Column('varchar', { name: 'Name', nullable: false, length: 255 })
     @Length(1, 255)
     public name: string;
 
     @CreateDateColumn({ name: 'CreatedAt' })
-    public createdAt: string = '';
+    public createdAt: string | undefined;
 
     @UpdateDateColumn({ name: 'UpdatedAt' })
-    public updatedAt: string = '';
+    public updatedAt: string | undefined;
 
     constructor(artistName: string) {
         this.name = artistName;

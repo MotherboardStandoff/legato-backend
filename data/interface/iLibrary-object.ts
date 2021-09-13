@@ -1,6 +1,6 @@
 export interface ILibraryObject {
-    id: string;
+    id: string | undefined;
     name: string;
-    createdAt: string;
-    updatedAt: string;
+    createdAt: string | undefined;
+    updatedAt: string | undefined;
 }

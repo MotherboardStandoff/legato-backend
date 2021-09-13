@@ -35,7 +35,7 @@ ArtistRouter.get(`/:id`, async (req: Request, res: Response) => {
     }
     catch (err) {
 
-        (err == 'INVALID'? res.sendStatus(400): res.sendStatus(500));
+        (err == 'INVALID' ? res.sendStatus(400) : res.sendStatus(500));
     }
 });
 
@@ -47,7 +47,9 @@ ArtistRouter.post(`/`, async (req: Request, res: Response) => {
         let validationErr = await validate(createArtist);
 
         if (validationErr.length > 0) {
+
             res.sendStatus(400);
+            
             return;
         }
 

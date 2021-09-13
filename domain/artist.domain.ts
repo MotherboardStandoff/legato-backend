@@ -1,10 +1,13 @@
-import { isUUID, validate } from "class-validator";
-import { getCustomRepository } from "typeorm";
+import { isUUID, validate, length } from "class-validator";
+import { DeleteResult, getCustomRepository } from "typeorm";
 import { Artist } from "../data/entity/artist";
 import { ArtistRepository } from "../data/repository/artist.repository";
 import { ErrorCodes } from "../enum/error-codes";
 
 export class ArtistDomain {
+
+    private readonly MIN_NAME_LENGTH: number = 1;
+    private readonly MAX_NAME_LENGTH: number = 255;
 
     constructor() {
     }
@@ -15,11 +18,13 @@ export class ArtistDomain {
 
             try {
 
+                let nameLengthOk: boolean = length(artistName, this.MIN_NAME_LENGTH, this.MAX_NAME_LENGTH);
+
+                if (!nameLengthOk) throw (ErrorCodes.INVALID);
+
                 let repo = getCustomRepository(ArtistRepository);
 
-                let artist = repo.create();
-
-                artist.name = artistName;
+                let artist = new Artist(artistName);
 
                 let createdArtist = await repo.save(artist);
 
@@ -74,32 +79,52 @@ export class ArtistDomain {
         });
     }
 
-    public updateArtist(updatedArtist: Artist): Promise<Artist> {
+    public updateArtist(artistID: string, artistName: string): Promise<Artist> {
 
         return new Promise(async (resolve, reject) => {
 
             try {
 
-                let validationErr = await validate(updatedArtist);
+                if (!isUUID(artistID)) throw (ErrorCodes.INVALID); //verify artist ID
 
-                if (validationErr.length > 0) throw (ErrorCodes.INVALID);
+                if (!length(artistName, this.MIN_NAME_LENGTH, this.MAX_NAME_LENGTH)) throw (ErrorCodes.INVALID); //verify artist name length
 
                 let repo = getCustomRepository(ArtistRepository);
 
-                let artist = await repo.findOne(updatedArtist.id);
+                let artist = await repo.findOne(artistID);
 
-                if (!artist) {
+                if (!artist) throw (ErrorCodes.NOT_FOUND);
 
-                    throw (ErrorCodes.NOT_FOUND);
-                }
-                else {
+                artist.name = artistName;
 
-                    artist.name = updatedArtist.name;
+                artist = await repo.save(artist);
 
-                    artist = await repo.save(artist);
+                resolve(artist);
+            }
+            catch (err) {
 
-                    resolve(artist);
-                }
+                reject(err);
+            }
+        });
+    }
+
+    public deleteArtist(artistID: string): Promise<DeleteResult> {
+
+        return new Promise(async (resolve, reject) => {
+
+            try {
+
+                if (!isUUID(artistID)) throw (ErrorCodes.INVALID);
+
+                let repo = getCustomRepository(ArtistRepository);
+
+                let artist = await repo.findOne(artistID);
+
+                if (!artist) throw (ErrorCodes.NOT_FOUND);
+
+                let result = await repo.delete({ id: artist.id });
+
+                resolve(result);
             }
             catch (err) {
 

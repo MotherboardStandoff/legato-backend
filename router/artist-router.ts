@@ -1,7 +1,6 @@
 import express, { Router, Request, Response } from 'express';
-import { validate, ValidationError } from 'class-validator';
+import { isUUID, length, validate, ValidationError } from 'class-validator';
 import { ArtistDomain } from '../domain/artist.domain';
-import { CreateArtist } from '../class/create-artist';
 import { Artist } from '../data/entity/artist';
 import { ErrorCodes } from '../enum/error-codes';
 import { getHttpErrorCode } from '../class/http-error-code';
@@ -20,7 +19,7 @@ ArtistRouter.get(`/`, async (req: Request, res: Response) => {
     }
     catch (err) {
 
-        console.log(err);
+        console.error(err);
 
         res.sendStatus(500);
     }
@@ -38,7 +37,7 @@ ArtistRouter.get(`/:id`, async (req: Request, res: Response) => {
     }
     catch (err) {
 
-        console.log(err);
+        console.error(err);
 
         res.sendStatus(getHttpErrorCode(err));
     }
@@ -47,39 +46,46 @@ ArtistRouter.get(`/:id`, async (req: Request, res: Response) => {
 ArtistRouter.post(`/`, async (req: Request, res: Response) => {
 
     try {
-        let createArtist: CreateArtist = new CreateArtist(req.body.name);
-
-        let validationErr = await validate(createArtist);
-
-        if (validationErr.length > 0) {
-
-            res.sendStatus(400);
-
-            return;
-        }
 
         let artist = await domain.createNewArtist(req.body.name);
 
         res.json(artist);
     }
     catch (err) {
-        res.sendStatus(500);
+
+        console.error(err);
+
+        res.sendStatus(getHttpErrorCode(err));
     }
 });
 
-ArtistRouter.put(`/`, async (req: Request, res: Response) => {
+ArtistRouter.put(`/:id`, async (req: Request, res: Response) => {
 
     try {
 
-        let updatedArtist: Artist = new Artist(req.body.name, req.body.id, req.body.createdAt, req.body.updatedAt);
-
-        let artist = await domain.updateArtist(updatedArtist);
+        let artist = await domain.updateArtist(req.params['id'], req.body.name);
 
         res.json(artist);
     }
     catch (err) {
 
-        console.log(err);
+        console.error(err);
+
+        res.sendStatus(getHttpErrorCode(err));
+    }
+});
+
+ArtistRouter.delete(`/:id`, async (req: Request, res: Response) => {
+
+    try {
+
+        let deleteRes = await domain.deleteArtist(req.params['id']);
+
+        res.json(deleteRes);
+    }
+    catch (err) {
+
+        console.error(err);
 
         res.sendStatus(getHttpErrorCode(err));
     }

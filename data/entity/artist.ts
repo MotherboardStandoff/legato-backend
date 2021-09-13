@@ -20,7 +20,7 @@ export class Artist implements ILibraryObject {
     public updatedAt: string | undefined;
 
     constructor(artistName: string, id?: string, createdAt?: string, updatedAt?: string) {
-        this.name = artistName;        
+        this.name = artistName;
         this.id = id;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;

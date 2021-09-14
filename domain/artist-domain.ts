@@ -18,7 +18,7 @@ export class ArtistDomain {
 
             try {
 
-                let nameLengthOk: boolean = length(artistName, this.MIN_NAME_LENGTH, this.MAX_NAME_LENGTH);
+                let nameLengthOk: boolean = length(artistName.trim(), this.MIN_NAME_LENGTH, this.MAX_NAME_LENGTH);
 
                 if (!nameLengthOk) throw (ErrorCodes.INVALID);
 
@@ -87,7 +87,7 @@ export class ArtistDomain {
 
                 if (!isUUID(artistID)) throw (ErrorCodes.INVALID); //verify artist ID
 
-                if (!length(artistName, this.MIN_NAME_LENGTH, this.MAX_NAME_LENGTH)) throw (ErrorCodes.INVALID); //verify artist name length
+                if (!length(artistName.trim(), this.MIN_NAME_LENGTH, this.MAX_NAME_LENGTH)) throw (ErrorCodes.INVALID); //verify artist name length
 
                 let repo = getCustomRepository(ArtistRepository);
 

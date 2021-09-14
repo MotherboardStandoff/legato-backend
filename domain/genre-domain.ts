@@ -59,7 +59,7 @@ export class GenreDomain {
 
             try {
 
-                if (!length(genreName, this._MIN_NAME_LENGTH, this._MAX_NAME_LENGTH)) throw (ErrorCodes.INVALID);
+                if (!length(genreName.trim(), this._MIN_NAME_LENGTH, this._MAX_NAME_LENGTH)) throw (ErrorCodes.INVALID);
 
                 let repo = getCustomRepository(GenreRepository);
                 let genre = new Genre(genreName);
@@ -81,7 +81,7 @@ export class GenreDomain {
 
             try {
 
-                if (!length(genreName, this._MIN_NAME_LENGTH, this._MAX_NAME_LENGTH)) throw (ErrorCodes.INVALID);
+                if (!length(genreName.trim(), this._MIN_NAME_LENGTH, this._MAX_NAME_LENGTH)) throw (ErrorCodes.INVALID);
                 if (!isUUID(genreID)) throw (ErrorCodes.INVALID);
 
                 let repo = getCustomRepository(GenreRepository);

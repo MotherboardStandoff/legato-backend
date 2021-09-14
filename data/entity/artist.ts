@@ -21,10 +21,7 @@ export class Artist implements ILibraryObject {
     @IsDateString()
     public updatedAt: string | undefined;
 
-    constructor(artistName: string, id?: string, createdAt?: string, updatedAt?: string) {
+    constructor(artistName: string) {
         this.name = artistName;
-        this.id = id;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 }

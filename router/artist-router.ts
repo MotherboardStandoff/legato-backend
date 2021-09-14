@@ -47,7 +47,7 @@ ArtistRouter.post(`/`, async (req: Request, res: Response) => {
 
     try {
 
-        let artist = await domain.createNewArtist(req.body.name);
+        let artist = await domain.saveArtist(req.body.name);
 
         res.json(artist);
     }

@@ -12,7 +12,7 @@ export class ArtistDomain {
     constructor() {
     }
 
-    public createNewArtist(artistName: string): Promise<Artist> {
+    public saveArtist(artistName: string): Promise<Artist> {
 
         return new Promise(async (resolve, reject) => {
 

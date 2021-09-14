@@ -5,6 +5,7 @@ import { Artist } from "../entity/artist";
 export class ArtistRepository extends Repository<Artist> {
 
     public getArtistByName(artistName: string): Promise<Artist[]> {
+
         return new Promise(async (resolve, reject) => {
 
             try {

@@ -132,4 +132,27 @@ export class ArtistDomain {
             }
         });
     }
+
+    public exists(artistID: string): Promise<boolean> {
+
+        return new Promise(async (resolve, reject) => {
+
+            try {
+
+                if (!isUUID(artistID)) throw (HttpErrorCodes.BAD_REQUEST);
+
+                let repo = getCustomRepository(ArtistRepository);
+
+                let artist = await this.getArtistByID(artistID);
+
+                if (!artist) resolve(false);
+
+                resolve(true);
+            }
+            catch (err) {
+
+                reject(err);
+            }
+        });
+    }
 }

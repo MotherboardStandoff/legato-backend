@@ -1,5 +1,5 @@
 import { PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Entity } from 'typeorm';
-import { Length, IsUUID } from 'class-validator';
+import { Length, IsUUID, IsDateString } from 'class-validator';
 import { ILibraryObject } from '../interface/iLibrary-object';
 
 @Entity({ name: 'artist' })
@@ -14,9 +14,11 @@ export class Artist implements ILibraryObject {
     public name: string;
 
     @CreateDateColumn({ name: 'CreatedAt' })
+    @IsDateString()
     public createdAt: string | undefined;
 
     @UpdateDateColumn({ name: 'UpdatedAt' })
+    @IsDateString()
     public updatedAt: string | undefined;
 
     constructor(artistName: string, id?: string, createdAt?: string, updatedAt?: string) {

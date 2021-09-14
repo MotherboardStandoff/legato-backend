@@ -3,5 +3,4 @@ import { Genre } from "../entity/genre";
 
 @EntityRepository(Genre)
 export class GenreRepository extends Repository<Genre>{
-
 }

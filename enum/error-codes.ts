@@ -1,4 +1,5 @@
 export enum ErrorCodes {
     'INVALID',
-    'NOT_FOUND'
+    'NOT_FOUND',
+    'UNSUCCESSFUL'
 }

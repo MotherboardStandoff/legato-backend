@@ -4,6 +4,7 @@ import { createConnection } from 'typeorm';
 import express, { Request, Response, Application } from 'express';
 import cors from 'cors';
 import { ArtistRouter } from './router/artist-router';
+import { GenreRouter } from './router/genre-router';
 
 dotenv.config();
 
@@ -19,7 +20,8 @@ createConnection()
         App.use([express.json(), cors()]);
 
         //Routers
-        App.use(`/artist`, ArtistRouter);
+        App.use(`/artists`, ArtistRouter);
+        App.use(`/genres`, GenreRouter);
 
         App.get(`/`, (req: Request, res: Response) => {
 

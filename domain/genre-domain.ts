@@ -19,7 +19,7 @@ export class GenreDomain {
 
                 let repo = getCustomRepository(GenreRepository);
 
-                let genres = await repo.find();
+                let genres = await repo.find({ order: { name: 'ASC' } });
 
                 resolve(genres);
             }

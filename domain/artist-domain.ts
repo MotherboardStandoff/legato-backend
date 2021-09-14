@@ -24,7 +24,7 @@ export class ArtistDomain {
 
                 let repo = getCustomRepository(ArtistRepository);
 
-                let artist = new Artist(artistName);
+                let artist = new Artist(artistName.trim());
 
                 let createdArtist = await repo.save(artist);
 
@@ -95,7 +95,7 @@ export class ArtistDomain {
 
                 if (!artist) throw (ErrorCodes.NOT_FOUND);
 
-                artist.name = artistName;
+                artist.name = artistName.trim();
 
                 artist = await repo.save(artist);
 

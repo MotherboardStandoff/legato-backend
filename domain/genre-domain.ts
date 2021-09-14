@@ -62,9 +62,9 @@ export class GenreDomain {
                 if (!length(genreName.trim(), this._MIN_NAME_LENGTH, this._MAX_NAME_LENGTH)) throw (ErrorCodes.INVALID);
 
                 let repo = getCustomRepository(GenreRepository);
-                let genre = new Genre(genreName);
+                let genre = new Genre(genreName.trim());
 
-                genre = await repo.save(genre);
+                genre = await repo.save(genre)
 
                 resolve(genre);
             }
@@ -90,7 +90,7 @@ export class GenreDomain {
 
                 if (!genre) throw (ErrorCodes.NOT_FOUND);
 
-                genre.name = genreName;
+                genre.name = genreName.trim();
 
                 let updatedGenre = await repo.save(genre);
 

@@ -1,7 +1,7 @@
 import { isUUID, validate, length } from "class-validator";
 import { DeleteResult, getCustomRepository } from "typeorm";
 import { Artist } from "../data/entity/artist";
-import { ArtistRepository } from "../data/repository/artist.repository";
+import { ArtistRepository } from "../data/repository/artist-repository";
 import { ErrorCodes } from "../enum/error-codes";
 
 export class ArtistDomain {

@@ -1,4 +1,4 @@
-import { isUUID, validate, length } from "class-validator";
+import { isUUID, length } from "class-validator";
 import { DeleteResult, getCustomRepository } from "typeorm";
 import { Artist } from "../data/entity/artist";
 import { ArtistRepository } from "../data/repository/artist-repository";

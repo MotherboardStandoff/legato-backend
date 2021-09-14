@@ -2,7 +2,7 @@ import { isUUID, length } from "class-validator";
 import { DeleteResult, getCustomRepository } from "typeorm";
 import { Genre } from "../data/entity/genre";
 import { GenreRepository } from "../data/repository/genre-repository";
-import { ErrorCodes } from "../enum/error-codes";
+import { HttpErrorCodes } from "../enum/error-codes";
 
 export class GenreDomain {
 
@@ -36,13 +36,13 @@ export class GenreDomain {
 
             try {
 
-                if (!isUUID(genreID)) throw (ErrorCodes.INVALID);
+                if (!isUUID(genreID)) throw (HttpErrorCodes.BAD_REQUEST);
 
                 let repo = getCustomRepository(GenreRepository);
 
                 let genre = await repo.findOne(genreID);
 
-                if (!genre) throw (ErrorCodes.NOT_FOUND);
+                if (!genre) throw (HttpErrorCodes.NOT_FOUND);
 
                 resolve(genre);
             }
@@ -59,7 +59,7 @@ export class GenreDomain {
 
             try {
 
-                if (!length(genreName.trim(), this._MIN_NAME_LENGTH, this._MAX_NAME_LENGTH)) throw (ErrorCodes.INVALID);
+                if (!length(genreName.trim(), this._MIN_NAME_LENGTH, this._MAX_NAME_LENGTH)) throw (HttpErrorCodes.BAD_REQUEST);
 
                 let repo = getCustomRepository(GenreRepository);
                 let genre = new Genre(genreName.trim());
@@ -81,14 +81,14 @@ export class GenreDomain {
 
             try {
 
-                if (!length(genreName.trim(), this._MIN_NAME_LENGTH, this._MAX_NAME_LENGTH)) throw (ErrorCodes.INVALID);
-                if (!isUUID(genreID)) throw (ErrorCodes.INVALID);
+                if (!length(genreName.trim(), this._MIN_NAME_LENGTH, this._MAX_NAME_LENGTH)) throw (HttpErrorCodes.BAD_REQUEST);
+                if (!isUUID(genreID)) throw (HttpErrorCodes.BAD_REQUEST);
 
                 let repo = getCustomRepository(GenreRepository);
 
                 let genre = await repo.findOne(genreID);
 
-                if (!genre) throw (ErrorCodes.NOT_FOUND);
+                if (!genre) throw (HttpErrorCodes.NOT_FOUND);
 
                 genre.name = genreName.trim();
 
@@ -109,17 +109,17 @@ export class GenreDomain {
 
             try {
 
-                if (!isUUID(genreID)) throw (ErrorCodes.INVALID);
+                if (!isUUID(genreID)) throw (HttpErrorCodes.BAD_REQUEST);
 
                 let repo = getCustomRepository(GenreRepository);
 
                 let genre = repo.findOne(genreID);
 
-                if (!genre) throw (ErrorCodes.NOT_FOUND);
+                if (!genre) throw (HttpErrorCodes.NOT_FOUND);
 
                 let result = await repo.delete({ id: genreID });
 
-                if (result.affected && result.affected == 0) throw (ErrorCodes.UNSUCCESSFUL);
+                if (result.affected && result.affected == 0) throw (HttpErrorCodes.UNSUCCESSFUL);
 
                 resolve(result);
             }

@@ -1,5 +1,5 @@
 import express, { Router, Request, Response } from 'express';
-import { getHttpErrorCode } from '../class/http-error-code';
+import { getHttpErrorCode } from '../function/http-error-code';
 import { GenreDomain } from '../domain/genre-domain';
 
 export const GenreRouter: Router = express.Router();

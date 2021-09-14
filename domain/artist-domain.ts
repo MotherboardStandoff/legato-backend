@@ -2,7 +2,7 @@ import { isUUID, length } from "class-validator";
 import { DeleteResult, getCustomRepository } from "typeorm";
 import { Artist } from "../data/entity/artist";
 import { ArtistRepository } from "../data/repository/artist-repository";
-import { ErrorCodes } from "../enum/error-codes";
+import { HttpErrorCodes } from "../enum/error-codes";
 
 export class ArtistDomain {
 
@@ -20,7 +20,7 @@ export class ArtistDomain {
 
                 let nameLengthOk: boolean = length(artistName.trim(), this.MIN_NAME_LENGTH, this.MAX_NAME_LENGTH);
 
-                if (!nameLengthOk) throw (ErrorCodes.INVALID);
+                if (!nameLengthOk) throw (HttpErrorCodes.BAD_REQUEST);
 
                 let repo = getCustomRepository(ArtistRepository);
 
@@ -68,7 +68,7 @@ export class ArtistDomain {
 
                 let artist = await repo.findOne(artistID);
 
-                if (!artist) throw (ErrorCodes.NOT_FOUND);
+                if (!artist) throw (HttpErrorCodes.NOT_FOUND);
 
                 resolve(artist);
             }
@@ -85,15 +85,15 @@ export class ArtistDomain {
 
             try {
 
-                if (!isUUID(artistID)) throw (ErrorCodes.INVALID); //verify artist ID
+                if (!isUUID(artistID)) throw (HttpErrorCodes.BAD_REQUEST); //verify artist ID
 
-                if (!length(artistName.trim(), this.MIN_NAME_LENGTH, this.MAX_NAME_LENGTH)) throw (ErrorCodes.INVALID); //verify artist name length
+                if (!length(artistName.trim(), this.MIN_NAME_LENGTH, this.MAX_NAME_LENGTH)) throw (HttpErrorCodes.BAD_REQUEST); //verify artist name length
 
                 let repo = getCustomRepository(ArtistRepository);
 
                 let artist = await repo.findOne(artistID);
 
-                if (!artist) throw (ErrorCodes.NOT_FOUND);
+                if (!artist) throw (HttpErrorCodes.NOT_FOUND);
 
                 artist.name = artistName.trim();
 
@@ -114,13 +114,13 @@ export class ArtistDomain {
 
             try {
 
-                if (!isUUID(artistID)) throw (ErrorCodes.INVALID);
+                if (!isUUID(artistID)) throw (HttpErrorCodes.BAD_REQUEST);
 
                 let repo = getCustomRepository(ArtistRepository);
 
                 let artist = await repo.findOne(artistID);
 
-                if (!artist) throw (ErrorCodes.NOT_FOUND);
+                if (!artist) throw (HttpErrorCodes.NOT_FOUND);
 
                 let result = await repo.delete({ id: artist.id });
 

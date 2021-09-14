@@ -2,8 +2,8 @@ import express, { Router, Request, Response } from 'express';
 import { isUUID, length, validate, ValidationError } from 'class-validator';
 import { ArtistDomain } from '../domain/artist-domain';
 import { Artist } from '../data/entity/artist';
-import { ErrorCodes } from '../enum/error-codes';
-import { getHttpErrorCode } from '../class/http-error-code';
+import { HttpErrorCodes } from '../enum/error-codes';
+import { getHttpErrorCode } from '../function/http-error-code';
 
 export const ArtistRouter: Router = express.Router();
 

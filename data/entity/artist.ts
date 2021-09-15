@@ -1,6 +1,7 @@
-import { PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Entity } from 'typeorm';
+import { PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Entity, OneToMany } from 'typeorm';
 import { Length, IsUUID, IsDateString } from 'class-validator';
 import { ILibraryObject } from '../interface/iLibrary-object';
+import { Album } from './album';
 
 @Entity({ name: 'artist' })
 export class Artist implements ILibraryObject {
@@ -20,6 +21,9 @@ export class Artist implements ILibraryObject {
     @UpdateDateColumn({ name: 'UpdatedAt' })
     @IsDateString()
     public updatedAt: string | undefined;
+
+    @OneToMany(() => Album, album => album.artist)
+    public albums: Album[] | undefined;
 
     constructor(artistName: string) {
         this.name = artistName;

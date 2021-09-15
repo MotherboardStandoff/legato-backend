@@ -4,6 +4,7 @@ import { ArtistDomain } from '../domain/artist-domain';
 import { Artist } from '../data/entity/artist';
 import { HttpErrorCodes } from '../enum/error-codes';
 import { getHttpErrorCode } from '../function/http-error-code';
+import { defaultApiErrorResponse } from '../function/default-api-error-response';
 
 export const ArtistRouter: Router = express.Router();
 
@@ -19,9 +20,7 @@ ArtistRouter.get(`/`, async (req: Request, res: Response) => {
     }
     catch (err) {
 
-        console.error(err);
-
-        res.sendStatus(500);
+        defaultApiErrorResponse(err, res);
     }
 });
 
@@ -29,17 +28,27 @@ ArtistRouter.get(`/:id`, async (req: Request, res: Response) => {
 
     try {
 
-        let artistID: string = req.params['id'];
-
-        let artist = await domain.getArtistByID(artistID);
+        let artist = await domain.getArtistByID(req.params['id']);
 
         res.json(artist);
     }
     catch (err) {
 
-        console.error(err);
+        defaultApiErrorResponse(err, res);
+    }
+});
 
-        res.sendStatus(getHttpErrorCode(err));
+ArtistRouter.get(`/:id/albums`, async (req: Request, res: Response) => {
+
+    try {
+
+        let artist = await domain.getArtistAndAlbumsByID(req.params['id']);
+
+        res.json(artist);
+    }
+    catch (err) {
+
+        defaultApiErrorResponse(err, res);
     }
 });
 
@@ -53,9 +62,7 @@ ArtistRouter.post(`/`, async (req: Request, res: Response) => {
     }
     catch (err) {
 
-        console.error(err);
-
-        res.sendStatus(getHttpErrorCode(err));
+        defaultApiErrorResponse(err, res);
     }
 });
 
@@ -69,9 +76,7 @@ ArtistRouter.put(`/:id`, async (req: Request, res: Response) => {
     }
     catch (err) {
 
-        console.error(err);
-
-        res.sendStatus(getHttpErrorCode(err));
+        defaultApiErrorResponse(err, res);
     }
 });
 
@@ -85,8 +90,6 @@ ArtistRouter.delete(`/:id`, async (req: Request, res: Response) => {
     }
     catch (err) {
 
-        console.error(err);
-
-        res.sendStatus(getHttpErrorCode(err));
+        defaultApiErrorResponse(err, res);
     }
 });

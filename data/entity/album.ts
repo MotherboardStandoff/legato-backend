@@ -1,6 +1,8 @@
 import { ILibraryObject } from '../interface/iLibrary-object';
-import { Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, Column } from 'typeorm';
-import { Length, IsUUID } from 'class-validator';
+import { Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, Column, ManyToOne } from 'typeorm';
+import { Length, IsUUID, Min } from 'class-validator';
+import { Artist } from './artist';
+import { Genre } from './genre';
 
 @Entity({ name: 'album' })
 export class Album implements ILibraryObject {
@@ -9,17 +11,13 @@ export class Album implements ILibraryObject {
     @IsUUID()
     public id: string | undefined;
 
-    @Column('uuid', { name: 'ArtistID', nullable: false })
-    @IsUUID()
-    public artistID: string;
-
-    @Column('uuid', { name: 'GenreID', nullable: false })
-    @IsUUID()
-    public genreID: string;
-
     @Column('varchar', { name: 'Name' })
     @Length(1, 255)
     public name: string;
+
+    @Column('integer', { name: 'Year', nullable: false })
+    @Min(1900)
+    public year: number;
 
     @CreateDateColumn({ name: 'CreatedAt' })
     public createdAt: string | undefined;
@@ -27,10 +25,17 @@ export class Album implements ILibraryObject {
     @UpdateDateColumn({ name: 'UpdatedAt' })
     public updatedAt: string | undefined;
 
-    constructor(albumName: string, artistID: string, genreID: string) {
+    @ManyToOne(() => Artist, artist => artist.albums)
+    public artist: Artist;
+
+    @ManyToOne(() => Genre, genre => genre.albums)
+    public genre: Genre;
+
+    constructor(albumName: string, year:number, artist: Artist, genre: Genre) {
 
         this.name = albumName;
-        this.artistID = artistID;
-        this.genreID = genreID;
+        this.artist = artist;
+        this.genre = genre;
+        this.year = year;
     }
 }

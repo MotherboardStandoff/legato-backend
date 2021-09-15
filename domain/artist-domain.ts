@@ -62,13 +62,38 @@ export class ArtistDomain {
 
             try {
 
-                if (!isUUID(artistID)) throw ('INVALID');
+                if (!isUUID(artistID)) throw (HttpErrorCodes.BAD_REQUEST);
 
                 let repo = getCustomRepository(ArtistRepository);
 
                 let artist = await repo.findOne(artistID);
 
                 if (!artist) throw (HttpErrorCodes.NOT_FOUND);
+
+                resolve(artist);
+            }
+            catch (err) {
+
+                reject(err);
+            }
+        });
+    }
+
+    public getArtistAndAlbumsByID(artistID: string): Promise<Artist> {
+
+        return new Promise(async (resolve, reject) => {
+
+            try {
+
+                if (!isUUID(artistID)) throw (HttpErrorCodes.BAD_REQUEST);
+
+                let repo = getCustomRepository(ArtistRepository);
+
+                let artist = await repo.findOne(artistID, { relations: ['albums'] });
+
+                if (!artist) throw (HttpErrorCodes.NOT_FOUND);
+
+                if(artist.albums) artist.albums = artist.albums.sort((a, b) => a.year > b.year ? 1 : -1);
 
                 resolve(artist);
             }
@@ -125,29 +150,6 @@ export class ArtistDomain {
                 let result = await repo.delete({ id: artist.id });
 
                 resolve(result);
-            }
-            catch (err) {
-
-                reject(err);
-            }
-        });
-    }
-
-    public exists(artistID: string): Promise<boolean> {
-
-        return new Promise(async (resolve, reject) => {
-
-            try {
-
-                if (!isUUID(artistID)) throw (HttpErrorCodes.BAD_REQUEST);
-
-                let repo = getCustomRepository(ArtistRepository);
-
-                let artist = await this.getArtistByID(artistID);
-
-                if (!artist) resolve(false);
-
-                resolve(true);
             }
             catch (err) {
 

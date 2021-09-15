@@ -129,25 +129,4 @@ export class GenreDomain {
             }
         });
     }
-
-    public exists(genreID: string): Promise<boolean> {
-
-        return new Promise(async (resolve, reject) => {
-
-            try {
-
-                if (!isUUID(genreID)) throw (HttpErrorCodes.NOT_FOUND);
-
-                let genre = await this.getGenreByID(genreID);
-
-                if (!genre) resolve(false);
-
-                resolve(true);
-            }
-            catch (err) {
-
-                reject(err);
-            }
-        });
-    }
 }

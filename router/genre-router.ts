@@ -1,6 +1,7 @@
 import express, { Router, Request, Response } from 'express';
 import { getHttpErrorCode } from '../function/http-error-code';
 import { GenreDomain } from '../domain/genre-domain';
+import { defaultApiErrorResponse } from '../function/default-api-error-response';
 
 export const GenreRouter: Router = express.Router();
 
@@ -16,9 +17,7 @@ GenreRouter.get(`/`, async (req: Request, res: Response) => {
     }
     catch (err) {
 
-        console.error(err);
-
-        res.sendStatus(getHttpErrorCode(err));
+        defaultApiErrorResponse(err, res);
     }
 });
 
@@ -32,9 +31,7 @@ GenreRouter.get(`/:id`, async (req: Request, res: Response) => {
     }
     catch (err) {
 
-        console.error(err);
-
-        res.sendStatus(getHttpErrorCode(err));
+        defaultApiErrorResponse(err, res);
     }
 });
 
@@ -48,9 +45,7 @@ GenreRouter.post(`/`, async (req: Request, res: Response) => {
     }
     catch (err) {
 
-        console.error(err);
-
-        res.sendStatus(getHttpErrorCode(err));
+        defaultApiErrorResponse(err, res);
     }
 });
 
@@ -64,9 +59,7 @@ GenreRouter.put(`/:id`, async (req: Request, res: Response) => {
     }
     catch (err) {
 
-        console.error(err);
-
-        res.sendStatus(getHttpErrorCode(err));
+        defaultApiErrorResponse(err, res);
     }
 });
 
@@ -80,8 +73,6 @@ GenreRouter.delete(`/:id`, async (req: Request, res: Response) => {
     }
     catch (err) {
 
-        console.error(err);
-
-        res.sendStatus(getHttpErrorCode(err));
+        defaultApiErrorResponse(err, res);
     }
 });

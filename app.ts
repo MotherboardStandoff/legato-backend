@@ -5,6 +5,7 @@ import express, { Request, Response, Application } from 'express';
 import cors from 'cors';
 import { ArtistRouter } from './router/artist-router';
 import { GenreRouter } from './router/genre-router';
+import { AlbumRouter } from './router/album-router';
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ createConnection()
         //Routers
         App.use(`/artists`, ArtistRouter);
         App.use(`/genres`, GenreRouter);
+        App.use('/albums', AlbumRouter);
 
         App.get(`/`, (req: Request, res: Response) => {
 

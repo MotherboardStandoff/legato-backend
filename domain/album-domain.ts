@@ -23,16 +23,16 @@ export class AlbumDomain {
                 if (!length(albumName, this._MIN_NAME_LENGTH, this._MAX_NAME_LENGTH)) throw (HttpErrorCodes.BAD_REQUEST);
                 if (!isUUID(artistID)) throw (HttpErrorCodes.BAD_REQUEST);
                 if (!isUUID(genreID)) throw (HttpErrorCodes.BAD_REQUEST);
-                if (!Min(year)) throw (HttpErrorCodes.BAD_REQUEST);
+                if (year <= this._MIN_YEAR) throw (HttpErrorCodes.BAD_REQUEST);
 
                 // verify artist exists
                 let artistDomain = new ArtistDomain();
-                let artist = await artistDomain.getArtistByID(artistID);
+                let artist = await artistDomain.getSingleArtist(artistID);
                 if (!artist) throw (HttpErrorCodes.NOT_FOUND);
 
                 //verify genre exists
                 let genreDomain = new GenreDomain();
-                let genre = await genreDomain.getGenreByID(genreID);
+                let genre = await genreDomain.getSingleGenre(genreID);
                 if (!genre) throw (HttpErrorCodes.NOT_FOUND);
 
                 let album = new Album(albumName, year, artist, genre);
@@ -75,7 +75,7 @@ export class AlbumDomain {
 
                 if (!isUUID(artistID)) throw HttpErrorCodes.BAD_REQUEST;
 
-                let artist = await new ArtistDomain().getArtistAndAlbumsByID(artistID);
+                let artist = await new ArtistDomain().getSingleArtistAndAlbums(artistID);
 
                 if (!artist) throw HttpErrorCodes.NOT_FOUND;
 

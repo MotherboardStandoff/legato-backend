@@ -1,5 +1,6 @@
 import { isUUID, length } from "class-validator";
 import { DeleteResult, getCustomRepository } from "typeorm";
+import { Album } from "../data/entity/album";
 import { Genre } from "../data/entity/genre";
 import { GenreRepository } from "../data/repository/genre-repository";
 import { HttpErrorCodes } from "../enum/error-codes";
@@ -30,7 +31,7 @@ export class GenreDomain {
         });
     }
 
-    public getGenreByID(genreID: string): Promise<Genre> {
+    public getSingleGenre(genreID: string): Promise<Genre> {
 
         return new Promise(async (resolve, reject) => {
 
@@ -43,6 +44,39 @@ export class GenreDomain {
                 let genre = await repo.findOne(genreID);
 
                 if (!genre) throw (HttpErrorCodes.NOT_FOUND);
+
+                resolve(genre);
+            }
+            catch (err) {
+
+                reject(err);
+            }
+        });
+    }
+
+    public getSingleGenreAndAlbums(genreID: string): Promise<Genre> {
+
+        return new Promise(async (resolve, reject) => {
+
+            try {
+
+                if (!isUUID) throw HttpErrorCodes.BAD_REQUEST;
+
+                let genre = await getCustomRepository(GenreRepository).findOne({ where: { id: genreID }, relations: ['albums', 'albums.artist'] });
+
+                if (!genre) throw HttpErrorCodes.NOT_FOUND;
+
+                if (genre.albums && genre.albums.length > 1) {
+
+                    // Sort albums by artist and album name
+                    genre.albums = genre.albums.sort((a, b) => {
+
+                        if(a.artist.name > b.artist.name) return 1;
+                        if(a.artist.name < b.artist.name) return -1;                        
+                        if(a.name > b.name) return 1;
+                        return -1;
+                    });
+                }
 
                 resolve(genre);
             }

@@ -56,7 +56,7 @@ export class ArtistDomain {
         });
     }
 
-    public getArtistByID(artistID: string): Promise<Artist> {
+    public getSingleArtist(artistID: string): Promise<Artist> {
 
         return new Promise(async (resolve, reject) => {
 
@@ -79,7 +79,7 @@ export class ArtistDomain {
         });
     }
 
-    public getArtistAndAlbumsByID(artistID: string): Promise<Artist> {
+    public getSingleArtistAndAlbums(artistID: string): Promise<Artist> {
 
         return new Promise(async (resolve, reject) => {
 
@@ -93,7 +93,7 @@ export class ArtistDomain {
 
                 if (!artist) throw (HttpErrorCodes.NOT_FOUND);
 
-                if(artist.albums) artist.albums = artist.albums.sort((a, b) => a.year > b.year ? 1 : -1);
+                if(artist.albums && artist.albums.length > 1) artist.albums = artist.albums.sort((a, b) => a.year > b.year ? 1 : -1);
 
                 resolve(artist);
             }

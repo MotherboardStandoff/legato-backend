@@ -28,7 +28,7 @@ ArtistRouter.get(`/:id`, async (req: Request, res: Response) => {
 
     try {
 
-        let artist = await domain.getArtistByID(req.params['id']);
+        let artist = await domain.getSingleArtist(req.params['id']);
 
         res.json(artist);
     }
@@ -42,7 +42,7 @@ ArtistRouter.get(`/:id/albums`, async (req: Request, res: Response) => {
 
     try {
 
-        let artist = await domain.getArtistAndAlbumsByID(req.params['id']);
+        let artist = await domain.getSingleArtistAndAlbums(req.params['id']);
 
         res.json(artist);
     }

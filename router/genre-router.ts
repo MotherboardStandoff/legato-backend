@@ -25,7 +25,21 @@ GenreRouter.get(`/:id`, async (req: Request, res: Response) => {
 
     try {
 
-        let genre = await domain.getGenreByID(req.params['id']);
+        let genre = await domain.getSingleGenre(req.params['id']);
+
+        res.json(genre);
+    }
+    catch (err) {
+
+        defaultApiErrorResponse(err, res);
+    }
+});
+
+GenreRouter.get(`/:id/albums`, async (req: Request, res: Response) => {
+
+    try {
+
+        let genre = await domain.getSingleGenreAndAlbums(req.params['id']);
 
         res.json(genre);
     }

@@ -42,9 +42,7 @@ export class ArtistDomain {
 
             try {
 
-                let repo = getCustomRepository(ArtistRepository);
-
-                let artists = await repo.find({ order: { name: 'ASC' } });
+                let artists = await getCustomRepository(ArtistRepository).find({ order: { name: 'ASC' } });
 
                 resolve(artists);
             }

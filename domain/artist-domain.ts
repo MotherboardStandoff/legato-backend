@@ -82,13 +82,11 @@ export class ArtistDomain {
 
                 if (!isUUID(artistID)) throw (HttpErrorCodes.BAD_REQUEST);
 
-                let repo = getCustomRepository(ArtistRepository);
-
-                let artist = await repo.findOne(artistID, { relations: ['albums', 'albums.genre'] });
+                let artist = await getCustomRepository(ArtistRepository).findOne(artistID, { relations: ['albums', 'albums.genre'] });
 
                 if (!artist) throw (HttpErrorCodes.NOT_FOUND);
 
-                if (artist.albums && artist.albums.length > 1) artist.albums = artist.albums.sort((a, b) => a.year > b.year ? 1 : -1);
+                if (artist.albums && artist.albums.length > 1) artist.albums = artist.albums.sort((a, b) => a.year > b.year ? 1 : -1); // sort albums by year
 
                 resolve(artist);
             }

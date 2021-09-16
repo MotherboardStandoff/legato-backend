@@ -1,4 +1,4 @@
-import { isUUID, length, Min } from "class-validator";
+import { isUUID, length, Min, validate, ValidationError } from "class-validator";
 import { Album } from "../data/entity/album";
 import { HttpErrorCodes } from "../enum/error-codes";
 import { getCustomRepository } from 'typeorm';
@@ -19,28 +19,27 @@ export class AlbumDomain {
         return new Promise(async (resolve, reject) => {
             try {
 
-                // verify variables passed into the function
-                if (!length(albumName, this._MIN_NAME_LENGTH, this._MAX_NAME_LENGTH)) throw (HttpErrorCodes.BAD_REQUEST);
+                // verify passed in IDs                
                 if (!isUUID(artistID)) throw (HttpErrorCodes.BAD_REQUEST);
                 if (!isUUID(genreID)) throw (HttpErrorCodes.BAD_REQUEST);
-                if (year <= this._MIN_YEAR) throw (HttpErrorCodes.BAD_REQUEST);
 
-                // verify artist exists
-                let artistDomain = new ArtistDomain();
-                let artist = await artistDomain.getSingleArtist(artistID);
-                if (!artist) throw (HttpErrorCodes.NOT_FOUND);
+                // get artist and genre entities
+                let artist = await new ArtistDomain().getSingleArtist(artistID);
+                if (!artist) throw (HttpErrorCodes.NOT_FOUND); // if no artist is found, throw error
 
-                //verify genre exists
-                let genreDomain = new GenreDomain();
-                let genre = await genreDomain.getSingleGenre(genreID);
-                if (!genre) throw (HttpErrorCodes.NOT_FOUND);
+                let genre = await new GenreDomain().getSingleGenre(genreID);
+                if (!genre) throw (HttpErrorCodes.NOT_FOUND); // if no genre is found, throw error
 
+                // create new album entity
                 let album = new Album(albumName, year, artist, genre);
-                let albumRepo = getCustomRepository(AlbumRepository);
 
-                let savedAlbum = await albumRepo.save(album);
+                // validate new album entity
+                let valErrs: ValidationError[] = await validate(album);
+                if (valErrs.length > 0) throw HttpErrorCodes.BAD_REQUEST; // if there are errors in the entity, send bad request
 
-                resolve(savedAlbum);
+                album = await getCustomRepository(AlbumRepository).save(album);// store new album entity in the DB, return created DB entry as album entity
+
+                resolve(album);
             }
             catch (err) {
 

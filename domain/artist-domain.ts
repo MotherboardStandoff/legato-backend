@@ -23,7 +23,7 @@ export class ArtistDomain {
                 // verify new artist entity
                 let validErrs = await validate(artist, { skipUndefinedProperties: true }); //skip undifined props, we only want to check the passed in values
 
-                if(validErrs.length > 0) throw HttpErrorCodes.BAD_REQUEST; // if passed in values are incorrect, throw bad request
+                if (validErrs.length > 0) throw HttpErrorCodes.BAD_REQUEST; // if passed in values are incorrect, throw bad request
 
                 artist = await getCustomRepository(ArtistRepository).save(artist); // store artist in db, return inserted artist as entity
 
@@ -63,9 +63,7 @@ export class ArtistDomain {
 
                 if (!isUUID(artistID)) throw (HttpErrorCodes.BAD_REQUEST);
 
-                let repo = getCustomRepository(ArtistRepository);
-
-                let artist = await repo.findOne(artistID);
+                let artist = await getCustomRepository(ArtistRepository).findOne(artistID);
 
                 if (!artist) throw (HttpErrorCodes.NOT_FOUND);
 

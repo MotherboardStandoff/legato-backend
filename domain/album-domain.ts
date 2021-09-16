@@ -34,7 +34,8 @@ export class AlbumDomain {
                 let album = new Album(albumName, year, artist, genre);
 
                 // validate new album entity
-                let valErrs: ValidationError[] = await validate(album);
+                let valErrs: ValidationError[] = await validate(album, {skipUndefinedProperties:true});
+                console.log(valErrs);
                 if (valErrs.length > 0) throw HttpErrorCodes.BAD_REQUEST; // if there are errors in the entity, send bad request
 
                 album = await getCustomRepository(AlbumRepository).save(album);// store new album entity in the DB, return created DB entry as album entity

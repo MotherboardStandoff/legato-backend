@@ -89,7 +89,7 @@ export class ArtistDomain {
 
                 let repo = getCustomRepository(ArtistRepository);
 
-                let artist = await repo.findOne(artistID, { relations: ['albums'] });
+                let artist = await repo.findOne(artistID, { relations: ['albums', 'albums.genre'] });
 
                 if (!artist) throw (HttpErrorCodes.NOT_FOUND);
 

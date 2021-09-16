@@ -1,6 +1,6 @@
 import { ILibraryObject } from '../interface/iLibrary-object';
 import { Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, Column, ManyToOne } from 'typeorm';
-import { Length, IsUUID, Min } from 'class-validator';
+import { Length, IsUUID, Min, IsDate } from 'class-validator';
 import { Artist } from './artist';
 import { Genre } from './genre';
 
@@ -20,9 +20,11 @@ export class Album implements ILibraryObject {
     public year: number;
 
     @CreateDateColumn({ name: 'CreatedAt' })
+    @IsDate()
     public createdAt: string | undefined;
 
     @UpdateDateColumn({ name: 'UpdatedAt' })
+    @IsDate()
     public updatedAt: string | undefined;
 
     @ManyToOne(() => Artist, artist => artist.albums)
@@ -31,7 +33,7 @@ export class Album implements ILibraryObject {
     @ManyToOne(() => Genre, genre => genre.albums)
     public genre: Genre;
 
-    constructor(albumName: string, year:number, artist: Artist, genre: Genre) {
+    constructor(albumName: string, year: number, artist: Artist, genre: Genre) {
 
         this.name = albumName;
         this.artist = artist;

@@ -1,4 +1,4 @@
-import { isUUID, length, validate } from "class-validator";
+import { isUUID, length, validate, ValidationError } from "class-validator";
 import { DeleteResult, getCustomRepository } from "typeorm";
 import { Artist } from "../data/entity/artist";
 import { ArtistRepository } from "../data/repository/artist-repository";
@@ -6,11 +6,7 @@ import { HttpErrorCodes } from "../enum/error-codes";
 
 export class ArtistDomain {
 
-    private readonly MIN_NAME_LENGTH: number = 1;
-    private readonly MAX_NAME_LENGTH: number = 255;
-
-    constructor() {
-    }
+    constructor() {}
 
     public saveArtist(artistName: string): Promise<Artist> {
 
@@ -105,17 +101,21 @@ export class ArtistDomain {
 
                 if (!isUUID(artistID)) throw (HttpErrorCodes.BAD_REQUEST); //verify artist ID
 
-                if (!length(artistName.trim(), this.MIN_NAME_LENGTH, this.MAX_NAME_LENGTH)) throw (HttpErrorCodes.BAD_REQUEST); //verify artist name length
+                let artistRepo = getCustomRepository(ArtistRepository);
 
-                let repo = getCustomRepository(ArtistRepository);
-
-                let artist = await repo.findOne(artistID);
+                let artist = await artistRepo.findOne(artistID);
 
                 if (!artist) throw (HttpErrorCodes.NOT_FOUND);
 
                 artist.name = artistName.trim();
 
-                artist = await repo.save(artist);
+                let valErr: ValidationError[] = await validate(artist);
+
+                console.log(valErr);
+
+                if (valErr.length > 0) throw HttpErrorCodes.BAD_REQUEST;
+
+                artist = await artistRepo.save(artist);
 
                 resolve(artist);
             }

@@ -1,5 +1,5 @@
 import { PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Entity, OneToMany } from 'typeorm';
-import { Length, IsUUID, IsDateString } from 'class-validator';
+import { Length, IsUUID, IsDate } from 'class-validator';
 import { ILibraryObject } from '../interface/iLibrary-object';
 import { Album } from './album';
 
@@ -15,11 +15,11 @@ export class Genre implements ILibraryObject {
     public name: string;
 
     @CreateDateColumn({ name: 'CreatedAt' })
-    @IsDateString()
+    @IsDate()
     public createdAt: string | undefined;
 
     @UpdateDateColumn({ name: 'UpdatedAt' })
-    @IsDateString()
+    @IsDate()
     public updatedAt: string | undefined;
 
     @OneToMany(() => Album, album => album.genre)

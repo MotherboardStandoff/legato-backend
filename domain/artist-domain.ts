@@ -1,4 +1,4 @@
-import { isUUID, length } from "class-validator";
+import { isUUID, length, validate } from "class-validator";
 import { DeleteResult, getCustomRepository } from "typeorm";
 import { Artist } from "../data/entity/artist";
 import { ArtistRepository } from "../data/repository/artist-repository";
@@ -18,17 +18,16 @@ export class ArtistDomain {
 
             try {
 
-                let nameLengthOk: boolean = length(artistName.trim(), this.MIN_NAME_LENGTH, this.MAX_NAME_LENGTH);
+                let artist: Artist = new Artist(artistName.trim());
 
-                if (!nameLengthOk) throw (HttpErrorCodes.BAD_REQUEST);
+                // verify new artist entity
+                let validErrs = await validate(artist, { skipUndefinedProperties: true }); //skip undifined props, we only want to check the passed in values
 
-                let repo = getCustomRepository(ArtistRepository);
+                if(validErrs.length > 0) throw HttpErrorCodes.BAD_REQUEST; // if passed in values are incorrect, throw bad request
 
-                let artist = new Artist(artistName.trim());
+                artist = await getCustomRepository(ArtistRepository).save(artist); // store artist in db, return inserted artist as entity
 
-                let createdArtist = await repo.save(artist);
-
-                resolve(createdArtist);
+                resolve(artist);
             }
             catch (err) {
 
@@ -93,7 +92,7 @@ export class ArtistDomain {
 
                 if (!artist) throw (HttpErrorCodes.NOT_FOUND);
 
-                if(artist.albums && artist.albums.length > 1) artist.albums = artist.albums.sort((a, b) => a.year > b.year ? 1 : -1);
+                if (artist.albums && artist.albums.length > 1) artist.albums = artist.albums.sort((a, b) => a.year > b.year ? 1 : -1);
 
                 resolve(artist);
             }
